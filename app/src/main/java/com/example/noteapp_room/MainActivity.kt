@@ -1,6 +1,7 @@
 package com.example.noteapp_room
 
 import android.content.DialogInterface
+import android.content.res.Configuration
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
                     .show()
 
 
-                updatedrecycle()
+
             }
             else{
                 Toast.makeText(applicationContext,"please add note first",Toast.LENGTH_SHORT).show()
@@ -50,17 +51,27 @@ class MainActivity : AppCompatActivity() {
 
 
     }
+
     fun update(n: Note) {
         val ob= NoteDatabase.getinstant(applicationContext)
         var at= AlertDialog.Builder(this)
         at.setTitle("Edit Note")
         val input = EditText(this)
-        input.setText(n.note)
+        input.setHint(n.note)
         at.setView(input)
         at.setPositiveButton("Update", DialogInterface.OnClickListener { dialogInterface, i ->
-             ob.NoteDao().updateNote(Note(n.id,input.text.toString()))
-            updatedrecycle()
+            if(input.text.isNotEmpty()) {
+                ob.NoteDao().updateNote(Note(n.id, input.text.toString()))
+                Toast.makeText(applicationContext, "data successfully Edited", Toast.LENGTH_SHORT)
+                    .show()
+            }else if(input.text.isEmpty()){
+                Toast.makeText(applicationContext, "Field is empty", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+
         })
+
         at.setNegativeButton("Cancel", DialogInterface.OnClickListener { dialog, which -> dialog.cancel() })
 
         at.show()
@@ -81,6 +92,16 @@ class MainActivity : AppCompatActivity() {
     private fun deleteitem(note: Note) {
         val ob= NoteDatabase.getinstant(applicationContext)
         ob.NoteDao().deleteNote(note)
-        updatedrecycle()
+        Toast.makeText(applicationContext, "data successfully Deleted", Toast.LENGTH_SHORT)
+            .show()
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            updatedrecycle()
+        }
+
     }
 }

@@ -28,13 +28,7 @@ class RecycleView(val activity: MainActivity, val notes: List<Note>) : RecyclerV
         val note = notes[position]
 
         holder.itemView.apply {
-            if (position % 2 == 0) {
-                lll.setBackgroundColor(Color.GRAY)
-                textview2.setTextColor(Color.WHITE)
-            } else {
-                lll.setBackgroundColor(Color.WHITE)
-                textview2.setTextColor(Color.BLACK)
-            }
+
             textview2.text = note.note
 
            imageView.setOnClickListener {
